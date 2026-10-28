@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://frenchfries777mc.github.io/sitemap.xml
