@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="copyright" content="© 2026 Frenchfries777. CC BY-NC-ND 4.0 (https://creativecommons.org/licenses/by-nc-nd/4.0/)">
+<title>Frenchfries777 앱 스토어</title>
+<meta name="description" content="Frenchfries777의 게임, 교육 앱, 도구를 한곳에서 열어 보세요. 설치 없이 브라우저에서 바로 해요.">
+<link rel="canonical" href="https://app.frenchfries777.com/">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<meta name="theme-color" content="#0e0e0e">
+<meta property="og:title" content="Frenchfries777 앱 스토어">
+<meta property="og:description" content="게임, 교육 앱, 도구를 한곳에서. 설치 없이 바로 해요.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://app.frenchfries777.com/">
+<meta property="og:site_name" content="Frenchfries777">
+<link rel="stylesheet" href="store.css?v=1">
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <a class="logo" href="./"><img src="favicon.svg" alt="" width="30" height="30"><span>FRENCHFRIES<b>777</b></span></a>
+    <nav class="tabs" role="tablist" aria-label="분류" id="tabs">
+      <button class="tab" role="tab" data-t="all" aria-selected="true">오늘</button>
+      <button class="tab" role="tab" data-t="games" aria-selected="false">게임</button>
+      <button class="tab" role="tab" data-t="educations" aria-selected="false">교육</button>
+      <button class="tab" role="tab" data-t="tools" aria-selected="false">도구</button>
+    </nav>
+    <label class="srch"><span aria-hidden="true">&#9906;</span><input id="q" type="search" placeholder="앱 검색" aria-label="앱 검색" autocomplete="off"></label>
+  </header>
+
+  <main>
+    <div class="date" id="date"></div>
+    <h1 id="h1">오늘의 추천</h1>
+    <section class="feat" id="feat" aria-label="추천"></section>
+    <div id="body"></div>
+    <noscript><p class="note">앱 목록을 보려면 자바스크립트가 필요해요.</p></noscript>
+  </main>
+
+  <footer class="foot">
+    <span>Created by Frenchfries777 · <a href="https://frenchfries777.com/">허브로 가기</a></span>
+    <span class="ff-copy">© 2026 Frenchfries777 · <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/deed.ko" target="_blank" rel="noopener">CC BY-NC-ND 4.0</a></span>
+  </footer>
+</div>
+<script src="store.js?v=1"></script>
+</body>
+</html>
