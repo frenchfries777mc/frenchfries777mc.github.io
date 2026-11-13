@@ -41,7 +41,7 @@ function row(a){
   r.appendChild(icon(a));
   var t=el('div','t'); t.appendChild(el('b',null,a.name)); t.appendChild(el('span',null,a.tagline||''));
   var em=el('em'); em.appendChild(devLine(a)); t.appendChild(em);
-  r.appendChild(t); r.appendChild(getBtn(a)); r.appendChild(el('span','open','열기'));
+  r.appendChild(t); r.appendChild(getBtn(a));
   return r;
 }
 function featured(a){
@@ -51,7 +51,7 @@ function featured(a){
   top.appendChild(el('h2',null,a.name)); top.appendChild(el('p',null,a.tagline||'')); c.appendChild(top);
   var bar=el('div','bar'); bar.appendChild(icon(a));
   var d=el('div'); d.appendChild(el('b',null,a.name)); var sm=el('small'); sm.appendChild(devLine(a)); d.appendChild(sm);
-  bar.appendChild(d); bar.appendChild(getBtn(a)); bar.appendChild(el('span','open','열기')); c.appendChild(bar);
+  bar.appendChild(d); bar.appendChild(getBtn(a)); c.appendChild(bar);
   return c;
 }
 function match(a){
