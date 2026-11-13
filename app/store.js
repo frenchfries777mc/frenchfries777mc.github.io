@@ -29,12 +29,19 @@ function devLine(a){
   f.appendChild(document.createTextNode((a.dev||'')+((a.tags&&a.tags.length)?' · '+a.tags.slice(0,2).join(' · '):'')));
   return f;
 }
+/* "설치": 공식 프로그램 페이지를 설치 안내와 함께 열어요. 설치는 그 프로그램 주소에서만 할 수 있어요 */
+function getBtn(a){
+  if(!a.official) return document.createDocumentFragment();
+  var g=el('span','get','설치'); g.setAttribute('role','button');
+  g.addEventListener('click',function(e){e.preventDefault();e.stopPropagation();var u=safeUrl(a.url);if(u!=='#')location.href=u+(u.indexOf('?')>-1?'&':'?')+'ffinstall=1'});
+  return g;
+}
 function row(a){
   var r=el('a','row'); r.href=safeUrl(a.url);
   r.appendChild(icon(a));
   var t=el('div','t'); t.appendChild(el('b',null,a.name)); t.appendChild(el('span',null,a.tagline||''));
   var em=el('em'); em.appendChild(devLine(a)); t.appendChild(em);
-  r.appendChild(t); r.appendChild(el('span','open','열기'));
+  r.appendChild(t); r.appendChild(getBtn(a)); r.appendChild(el('span','open','열기'));
   return r;
 }
 function featured(a){
@@ -44,7 +51,7 @@ function featured(a){
   top.appendChild(el('h2',null,a.name)); top.appendChild(el('p',null,a.tagline||'')); c.appendChild(top);
   var bar=el('div','bar'); bar.appendChild(icon(a));
   var d=el('div'); d.appendChild(el('b',null,a.name)); var sm=el('small'); sm.appendChild(devLine(a)); d.appendChild(sm);
-  bar.appendChild(d); bar.appendChild(el('span','open','열기')); c.appendChild(bar);
+  bar.appendChild(d); bar.appendChild(getBtn(a)); bar.appendChild(el('span','open','열기')); c.appendChild(bar);
   return c;
 }
 function match(a){
@@ -85,7 +92,14 @@ document.getElementById('tabs').addEventListener('click',function(e){
 document.getElementById('q').addEventListener('input',function(e){q=e.target.value.trim().toLowerCase();render()});
 window.addEventListener('hashchange',function(){var t=location.hash.slice(1);if(t==='games'||t==='educations'||t==='tools')setTab(t);else if(!t)setTab('all')});
 
+/* 스토어 자체를 앱으로 설치 */
+var instEv=null, instB=document.getElementById('inst');
+window.addEventListener('beforeinstallprompt',function(e){e.preventDefault();instEv=e;if(instB)instB.hidden=false});
+window.addEventListener('appinstalled',function(){instEv=null;if(instB)instB.hidden=true});
+if(instB)instB.addEventListener('click',function(){var e=instEv;if(!e)return;instEv=null;instB.hidden=true;e.prompt()});
+try{if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(function(){})}catch(e){}
+
 var start=location.hash.slice(1); if(start==='games'||start==='educations'||start==='tools')tab=start;
-fetch('apps.json?v=1').then(function(r){if(!r.ok)throw 0;return r.json()}).then(function(j){apps=j.apps||[];render()})
+fetch('apps.json?v=2').then(function(r){if(!r.ok)throw 0;return r.json()}).then(function(j){apps=j.apps||[];render()})
   .catch(function(){document.getElementById('body').appendChild(el('p','note','앱 목록을 불러오지 못했어요. 새로고침해 보세요.'))});
 })();
