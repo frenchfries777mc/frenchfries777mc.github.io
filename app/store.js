@@ -31,13 +31,13 @@ function devLine(a){
 }
 /* "설치": 설치 전용 페이지(흰 화면)를 열어요 */
 function getBtn(a){
-  if(!a.official) return document.createDocumentFragment();
+  if(!a.official||!a.url) return document.createDocumentFragment();
   var g=el('span','get','설치'); g.setAttribute('role','button');
   g.addEventListener('click',function(e){e.preventDefault();e.stopPropagation();if(a.install)location.href=safeUrl(a.install);else if(/^[a-z]+$/.test(a.id))location.href='https://frenchfries777.com/games/install/?v=3&app='+a.id});
   return g;
 }
 function row(a){
-  var r=el('a','row'); r.href=safeUrl(a.url);
+  var r=el('a','row'); if(a.url)r.href=safeUrl(a.url);
   r.appendChild(icon(a));
   var t=el('div','t'); t.appendChild(el('b',null,a.name)); t.appendChild(el('span',null,a.tagline||''));
   var em=el('em'); em.appendChild(devLine(a)); t.appendChild(em);
@@ -45,7 +45,7 @@ function row(a){
   return r;
 }
 function featured(a){
-  var c=el('a','fc'); c.href=safeUrl(a.url);
+  var c=el('a','fc'); if(a.url)c.href=safeUrl(a.url);
   var bg=el('div','bg'); if(a.shot)bg.style.backgroundImage='url("'+safeUrl(a.shot)+'")'; c.appendChild(bg);
   var top=el('div'); top.appendChild(el('div','lab',labelOf(a.section)));
   top.appendChild(el('h2',null,a.name)); top.appendChild(el('p',null,a.tagline||'')); c.appendChild(top);
@@ -100,6 +100,6 @@ if(instB)instB.addEventListener('click',function(){var e=instEv;if(!e)return;ins
 try{if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js?v=2').catch(function(){})}catch(e){}
 
 var start=location.hash.slice(1); if(start==='games'||start==='educations'||start==='tools')tab=start;
-fetch('apps.json?v=3').then(function(r){if(!r.ok)throw 0;return r.json()}).then(function(j){apps=j.apps||[];render()})
+fetch('apps.json?v=4').then(function(r){if(!r.ok)throw 0;return r.json()}).then(function(j){apps=j.apps||[];render()})
   .catch(function(){document.getElementById('body').appendChild(el('p','note','앱 목록을 불러오지 못했어요. 새로고침해 보세요.'))});
 })();
