@@ -68,6 +68,9 @@ h1{font-family:var(--head);font-size:clamp(30px,5vw,44px);margin:22px 0 4px;lett
 .fc .get{color:#fff;border-color:rgba(255,255,255,.5)}
 .inst{flex:none;background:var(--fry);color:var(--fryfg);font-weight:900;padding:7px 16px;border-radius:999px;font-size:14px;border:0;cursor:pointer}
 .inst[hidden]{display:none}
+.up{flex:none;border:1px solid var(--line);color:var(--fry);font-weight:800;padding:6px 14px;border-radius:999px;font-size:14px}
+.up:hover{border-color:var(--fry)}
+.official.comm{color:var(--dim);border-color:var(--dim)}
 
 .foot{margin-top:48px;padding-top:16px;border-top:1px solid var(--line);color:var(--dim);font-size:12px;display:flex;gap:10px;flex-wrap:wrap;justify-content:space-between}
 .foot a{text-decoration:underline}
