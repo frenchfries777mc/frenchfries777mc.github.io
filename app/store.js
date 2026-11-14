@@ -33,7 +33,7 @@ function devLine(a){
 function getBtn(a){
   if(!a.official) return document.createDocumentFragment();
   var g=el('span','get','설치'); g.setAttribute('role','button');
-  g.addEventListener('click',function(e){e.preventDefault();e.stopPropagation();if(/^[a-z]+$/.test(a.id))location.href='https://frenchfries777.com/games/install/?app='+a.id});
+  g.addEventListener('click',function(e){e.preventDefault();e.stopPropagation();if(/^[a-z]+$/.test(a.id))location.href='https://frenchfries777.com/games/install/?v=3&app='+a.id});
   return g;
 }
 function row(a){
