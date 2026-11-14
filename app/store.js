@@ -42,16 +42,16 @@ function installUrl(a){
   return /^[a-z]+$/.test(a.id)?'https://frenchfries777.com/games/install/?v=4&app='+a.id:null;
 }
 /* 카드와 "설치" 버튼 모두 설치 화면(흰 화면)으로 가요. 설치 화면이 없는 앱만 원래 주소로 가요 */
-function cardUrl(a){return a.community?a.url:(installUrl(a)||safeUrl(a.url))}
+function cardUrl(a){if(a.nolink)return null;return a.community?a.url:(installUrl(a)||safeUrl(a.url))}
 function getBtn(a){
   if(a.community){return el('span','get','보기')}
-  if(!a.official) return document.createDocumentFragment();
+  if(!a.official||a.nolink) return document.createDocumentFragment();
   var g=el('span','get','설치'); g.setAttribute('role','button');
   g.addEventListener('click',function(e){e.preventDefault();e.stopPropagation();var u=installUrl(a);if(u)location.href=u});
   return g;
 }
 function row(a){
-  var r=el('a','row'); r.href=cardUrl(a);
+  var r=el('a','row'); var h=cardUrl(a); if(h)r.href=h;
   r.appendChild(icon(a));
   var t=el('div','t'); t.appendChild(el('b',null,a.name)); t.appendChild(el('span',null,a.tagline||''));
   var em=el('em'); em.appendChild(devLine(a)); t.appendChild(em);
@@ -59,7 +59,7 @@ function row(a){
   return r;
 }
 function featured(a){
-  var c=el('a','fc'); c.href=cardUrl(a);
+  var c=el('a','fc'); var h=cardUrl(a); if(h)c.href=h;
   var bg=el('div','bg'); if(a.shot)bg.style.backgroundImage='url("'+safeUrl(a.shot)+'")'; c.appendChild(bg);
   var top=el('div'); top.appendChild(el('div','lab',labelOf(a.section)));
   top.appendChild(el('h2',null,a.name)); top.appendChild(el('p',null,a.tagline||'')); c.appendChild(top);
@@ -114,7 +114,7 @@ if(instB)instB.addEventListener('click',function(){var e=instEv;if(!e)return;ins
 try{if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js?v=2').catch(function(){})}catch(e){}
 
 var start=location.hash.slice(1); if(start==='games'||start==='educations'||start==='tools'||start==='social')tab=start;
-fetch('apps.json?v=5').then(function(r){if(!r.ok)throw 0;return r.json()}).then(function(j){apps=j.apps||[];render();loadExtra()})
+fetch('apps.json?v=6').then(function(r){if(!r.ok)throw 0;return r.json()}).then(function(j){apps=j.apps||[];render();loadExtra()})
   .catch(function(){document.getElementById('body').appendChild(el('p','note','앱 목록을 불러오지 못했어요. 새로고침해 보세요.'))});
 /* 공식 앱 별점 + 승인된 커뮤니티 앱. 못 불러와도 스토어는 그대로 보여요 */
 function loadExtra(){
