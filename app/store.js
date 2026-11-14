@@ -30,14 +30,21 @@ function devLine(a){
   return f;
 }
 /* "설치": 설치 전용 페이지(흰 화면)를 열어요 */
+function installUrl(a){
+  if(!a.official) return null;
+  if(a.install) return safeUrl(a.install);
+  return /^[a-z]+$/.test(a.id)?'https://frenchfries777.com/games/install/?v=4&app='+a.id:null;
+}
+/* 카드와 "설치" 버튼 모두 설치 화면(흰 화면)으로 가요. 설치 화면이 없는 앱만 원래 주소로 가요 */
+function cardUrl(a){return installUrl(a)||safeUrl(a.url)}
 function getBtn(a){
   if(!a.official) return document.createDocumentFragment();
   var g=el('span','get','설치'); g.setAttribute('role','button');
-  g.addEventListener('click',function(e){e.preventDefault();e.stopPropagation();if(a.install)location.href=safeUrl(a.install);else if(/^[a-z]+$/.test(a.id))location.href='https://frenchfries777.com/games/install/?v=4&app='+a.id});
+  g.addEventListener('click',function(e){e.preventDefault();e.stopPropagation();var u=installUrl(a);if(u)location.href=u});
   return g;
 }
 function row(a){
-  var r=el('a','row'); r.href=safeUrl(a.url);
+  var r=el('a','row'); r.href=cardUrl(a);
   r.appendChild(icon(a));
   var t=el('div','t'); t.appendChild(el('b',null,a.name)); t.appendChild(el('span',null,a.tagline||''));
   var em=el('em'); em.appendChild(devLine(a)); t.appendChild(em);
@@ -45,7 +52,7 @@ function row(a){
   return r;
 }
 function featured(a){
-  var c=el('a','fc'); c.href=safeUrl(a.url);
+  var c=el('a','fc'); c.href=cardUrl(a);
   var bg=el('div','bg'); if(a.shot)bg.style.backgroundImage='url("'+safeUrl(a.shot)+'")'; c.appendChild(bg);
   var top=el('div'); top.appendChild(el('div','lab',labelOf(a.section)));
   top.appendChild(el('h2',null,a.name)); top.appendChild(el('p',null,a.tagline||'')); c.appendChild(top);
