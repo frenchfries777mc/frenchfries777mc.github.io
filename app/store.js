@@ -4,11 +4,9 @@
 var SECTIONS=[['games','게임'],['educations','교육'],['tools','도구'],['social','소통']];
 var FEATURED=['stickseum','crownenvoy'];
 var apps=[], tab='all', q='';
-/* 커뮤니티 앱(오너가 승인한 앱)과 별점은 Supabase 공개 함수로 읽어요. 이 스토어의 CSP(connect-src)에 이 주소가 들어 있어야 해요. */
-var SB='https://kebsbuvuutilitwlvxzv.supabase.co', SBK='sb_publishable_4Egu0zm3p6cxWGvP_-GlIw_mlCpO1Nf';
+/* 커뮤니티 앱(오너가 승인한 앱)과 별점은 community.json 에서 읽어요. GitHub 가 10분마다 새로 만들어 줘요. */
 var IMG=/^data:image\/(png|jpeg|webp);base64,[A-Za-z0-9+\/]+=*$/;
 var DETAIL='https://frenchfries777.com/store/app/?id=';
-function rpc(name,args){return fetch(SB+'/rest/v1/rpc/'+name,{method:'POST',headers:{'apikey':SBK,'Authorization':'Bearer '+SBK,'Content-Type':'application/json'},body:JSON.stringify(args||{})}).then(function(r){if(!r.ok)throw 0;return r.json()})}
 
 function el(tag,cls,text){var e=document.createElement(tag);if(cls)e.className=cls;if(text!=null)e.textContent=text;return e}
 function safeUrl(u){try{var x=new URL(u,location.href);return /^https?:$/.test(x.protocol)?x.href:'#'}catch(e){return '#'}}
@@ -118,17 +116,15 @@ fetch('apps.json?v=6').then(function(r){if(!r.ok)throw 0;return r.json()}).then(
   .catch(function(){document.getElementById('body').appendChild(el('p','note','앱 목록을 불러오지 못했어요. 새로고침해 보세요.'))});
 /* 공식 앱 별점 + 승인된 커뮤니티 앱. 못 불러와도 스토어는 그대로 보여요 */
 function loadExtra(){
-  Promise.all([rpc('app_rating_stats',{}).catch(function(){return []}),rpc('app_store_list',{}).catch(function(){return []})]).then(function(r){
-    var st={};(r[0]||[]).forEach(function(x){st[x.app_id]={avg:Number(x.avg),n:x.n}});
-    var seen={};apps.forEach(function(a){seen[a.id]=1});
-    (r[1]||[]).forEach(function(c){
+  fetch('community.json',{cache:'no-cache'}).then(function(r){if(!r.ok)throw 0;return r.json()}).then(function(j){
+    var st=j.stats||{}, seen={};apps.forEach(function(a){seen[a.id]=1});
+    (j.apps||[]).forEach(function(c){
       if(seen[c.id]||['games','educations','tools','social'].indexOf(c.category)<0)return;
-      apps.push({id:c.id,name:String(c.name||''),section:c.category,official:false,community:true,dev:String(c.dev||''),url:DETAIL+encodeURIComponent(c.id),tagline:String(c.tagline||''),
+      apps.push({id:String(c.id),name:String(c.name||''),section:c.category,official:false,community:true,dev:String(c.dev||''),url:DETAIL+encodeURIComponent(c.id),tagline:String(c.tagline||''),
         tags:(c.tags||[]).map(String),icon:IMG.test(c.icon||'')?c.icon:''});
-      if(c.rating&&c.rating_n){var ca=apps[apps.length-1];ca.rating=Number(c.rating);ca.rn=c.rating_n}
     });
-    apps.forEach(function(a){var s=st[a.id];if(s&&s.n){a.rating=s.avg;a.rn=s.n}});
+    apps.forEach(function(a){var s=st[a.id];if(s&&s.n){a.rating=Number(s.avg);a.rn=s.n}});
     render();
-  });
+  }).catch(function(){});
 }
 })();
