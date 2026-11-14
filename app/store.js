@@ -29,11 +29,11 @@ function devLine(a){
   f.appendChild(document.createTextNode((a.dev||'')+((a.tags&&a.tags.length)?' · '+a.tags.slice(0,2).join(' · '):'')));
   return f;
 }
-/* "설치": 공식 프로그램 페이지를 설치 안내와 함께 열어요. 설치는 그 프로그램 주소에서만 할 수 있어요 */
+/* "설치": 설치 전용 페이지(흰 화면)를 열어요 */
 function getBtn(a){
   if(!a.official) return document.createDocumentFragment();
   var g=el('span','get','설치'); g.setAttribute('role','button');
-  g.addEventListener('click',function(e){e.preventDefault();e.stopPropagation();var u=safeUrl(a.url);if(u!=='#')location.href=u+(u.indexOf('?')>-1?'&':'?')+'ffinstall=1'});
+  g.addEventListener('click',function(e){e.preventDefault();e.stopPropagation();if(/^[a-z]+$/.test(a.id))location.href='https://frenchfries777.com/games/install/?app='+a.id});
   return g;
 }
 function row(a){
