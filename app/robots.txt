@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://apps.frenchfries777.com/sitemap.xml
