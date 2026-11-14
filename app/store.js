@@ -17,7 +17,7 @@ function icon(a,extra){
   s.style.setProperty('--b','hsl('+((h+40)%360)+' 55% 28%)');
   if(a.icon){
     var im=document.createElement('img');
-    im.alt='';im.loading='lazy';im.decoding='async';im.src=safeUrl(a.icon);
+    im.alt='';im.decoding='async';im.src=safeUrl(a.icon);
     im.onerror=function(){im.remove();s.textContent=(a.name||'?').charAt(0).toUpperCase()};
     s.appendChild(im);
   }else{s.textContent=(a.name||'?').charAt(0).toUpperCase()}
