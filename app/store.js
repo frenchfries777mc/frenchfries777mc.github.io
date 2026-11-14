@@ -97,7 +97,7 @@ var instEv=null, instB=document.getElementById('inst');
 window.addEventListener('beforeinstallprompt',function(e){e.preventDefault();instEv=e;if(instB)instB.hidden=false});
 window.addEventListener('appinstalled',function(){instEv=null;if(instB)instB.hidden=true});
 if(instB)instB.addEventListener('click',function(){var e=instEv;if(!e)return;instEv=null;instB.hidden=true;e.prompt()});
-try{if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(function(){})}catch(e){}
+try{if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js?v=2').catch(function(){})}catch(e){}
 
 var start=location.hash.slice(1); if(start==='games'||start==='educations'||start==='tools')tab=start;
 fetch('apps.json?v=2').then(function(r){if(!r.ok)throw 0;return r.json()}).then(function(j){apps=j.apps||[];render()})
