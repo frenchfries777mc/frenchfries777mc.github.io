@@ -37,7 +37,7 @@ function devLine(a){
 function installUrl(a){
   if(!a.official) return null;
   if(a.install) return safeUrl(a.install);
-  return /^[a-z]+$/.test(a.id)?'https://frenchfries777.com/games/install/?v=5&app='+a.id:null;
+  return /^[a-z]+$/.test(a.id)?'https://frenchfries777.com/games/install/?v=6&app='+a.id:null;
 }
 /* 카드와 "설치" 버튼 모두 설치 화면(흰 화면)으로 가요. 설치 화면이 없는 앱만 원래 주소로 가요 */
 function cardUrl(a){if(a.nolink)return null;return a.community?a.url:(installUrl(a)||safeUrl(a.url))}
