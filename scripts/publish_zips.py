@@ -70,12 +70,17 @@ def extract(data):
         raise ValueError('맨 위에 index.html 이 있어야 해요')
     return files
 
-def shimmed(b):
+def beacon(app_id):
+    # 열린 횟수만 세요: 앱 번호와 "open" 만 보내고, 누가 열었는지는 보내지 않아요
+    return ('<script>try{fetch("%s/rest/v1/rpc/app_hit",{method:"POST",keepalive:true,headers:{apikey:"%s","Content-Type":"application/json"},'
+            'body:JSON.stringify({p_app:"%s",p_kind:"open"})}).catch(function(){})}catch(e){}</script>') % (SB, KEY, app_id)
+
+def shimmed(b, extra=''):
     s = b.decode('utf-8', 'replace')
     m = re.search(r'<head[^>]*>', s, re.I)
     if m:
-        return (s[:m.end()] + SHIM + s[m.end():]).encode()
-    return (SHIM + s).encode()
+        return (s[:m.end()] + SHIM + extra + s[m.end():]).encode()
+    return (SHIM + extra + s).encode()
 
 def write_app(app_id, files):
     dest = os.path.join('app', app_id)
@@ -85,7 +90,7 @@ def write_app(app_id, files):
         p = os.path.join(tmp, name)
         os.makedirs(os.path.dirname(p), exist_ok=True)
         if name.lower().endswith(('.html', '.htm')):
-            b = shimmed(b)
+            b = shimmed(b, beacon(app_id) if name == 'index.html' else '')
         with open(p, 'wb') as f:
             f.write(b)
     shutil.rmtree(dest, ignore_errors=True)
