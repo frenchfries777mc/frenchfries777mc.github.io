@@ -3,7 +3,7 @@
 - 공개 함수 app_zip_list 만 써요: 승인된 앱의 zip 위치만 나와요.
 - zip 은 다시 한 번 검사해요(확장자·크기·경로). 하나라도 어긋나면 그 앱은 올리지 않아요.
 - 승인이 취소된(반려·내림·철회) 앱 폴더는 지워요.
-- 앱 안에서 저장소(localStorage 등)를 못 써도 멈추지 않게, 모든 html 맨 위에 작은 보조 코드를 넣어요."""
+- 앱 안의 저장소(localStorage)는 보조 코드가 받아서 /run/ 페이지가 이 브라우저에 앱별로 보관해요. 모든 html 맨 위에 넣어요."""
 import io, json, os, re, shutil, sys, urllib.request, zipfile
 
 SB = 'https://kebsbuvuutilitwlvxzv.supabase.co'
@@ -14,9 +14,37 @@ OK_EXT = {'html','htm','css','js','mjs','json','txt','md','xml','map','csv','png
 MAX_ZIP = 8 * 1024 * 1024
 MAX_TOTAL = 40 * 1024 * 1024
 MAX_FILES = 400
-SHIM = ('<meta name="robots" content="noindex"><script>(function(){function mk(){var d={};return{getItem:function(k){return Object.prototype.hasOwnProperty.call(d,k)?d[k]:null},'
+SHIM = ('<meta name="robots" content="noindex"><script>(function(){'
+        'var ID=(location.pathname.match(/^\\/([0-9a-f-]{36})\\//)||[])[1];'
+        'if(window.top===window&&ID){location.replace("/run/?id="+ID);return}'
+        'var D={};try{var raw=null;if(/^#ffs=/.test(location.hash)){raw=decodeURIComponent(location.hash.slice(5));try{history.replaceState(null,"",location.pathname+location.search)}catch(e){}}'
+        'else if(/^ffs:/.test(window.name))raw=window.name.slice(4);'
+        'if(raw){var o=JSON.parse(raw);if(o&&typeof o==="object"&&!Array.isArray(o))D=o}}catch(e){}'
+        'var T=null;function flush(){clearTimeout(T);T=null;try{window.name="ffs:"+JSON.stringify(D)}catch(e){}try{parent.postMessage({ffs:1,d:D},"*")}catch(e){}}'
+        'function later(){if(!T)T=setTimeout(flush,200)}'
+        'addEventListener("message",function(e){var m=e.data;if(e.source===parent&&m&&m.ffs===1&&m.clear){for(var k in D)delete D[k];flush()}});'
+        'addEventListener("pagehide",flush);addEventListener("visibilitychange",function(){if(document.hidden)flush()});'
+        'function mk(persist){var d=persist?D:{};var h=Object.prototype.hasOwnProperty;var api={'
+        'getItem:function(k){k=String(k);return h.call(d,k)?d[k]:null},'
+        'setItem:function(k,v){d[String(k)]=String(v);if(persist)later()},'
+        'removeItem:function(k){delete d[String(k)];if(persist)later()},'
+        'clear:function(){for(var k in d)delete d[k];if(persist)later()},'
+        'key:function(i){return Object.keys(d)[i]||null}};'
+        'return new Proxy(api,{get:function(t,p){if(p==="length")return Object.keys(d).length;if(p in api)return api[p];return typeof p==="string"?api.getItem(p):undefined},'
+        'set:function(t,p,v){api.setItem(p,v);return true},deleteProperty:function(t,p){api.removeItem(p);return true}})}'
+        'try{Object.defineProperty(window,"localStorage",{value:mk(true),configurable:true});Object.defineProperty(window,"sessionStorage",{value:mk(false),configurable:true})}catch(e){}'
+        '})();</script>')
+
+SHIM_OLD = ('<meta name="robots" content="noindex"><script>(function(){function mk(){var d={};return{getItem:function(k){return Object.prototype.hasOwnProperty.call(d,k)?d[k]:null},'
         'setItem:function(k,v){d[k]=String(v)},removeItem:function(k){delete d[k]},clear:function(){d={}},key:function(i){return Object.keys(d)[i]||null},get length(){return Object.keys(d).length}}}'
         '["localStorage","sessionStorage"].forEach(function(n){try{window[n].getItem("x")}catch(e){try{Object.defineProperty(window,n,{value:mk(),configurable:true})}catch(e2){}}})})();</script>')
+
+
+# 새 저장 방식(/run/ 페이지)은 오너가 Worker 를 붙여 넣은 뒤 app/run/.on 파일을 만들면 켜져요. 그 전에는 예전 방식 그대로예요.
+if os.path.exists(os.path.join('app', 'run', '.on')):
+    pass
+else:
+    SHIM = SHIM_OLD
 
 def rpc(name):
     req = urllib.request.Request(f'{SB}/rest/v1/rpc/{name}', data=b'{}', headers={'apikey': KEY, 'Authorization': f'Bearer {KEY}', 'Content-Type': 'application/json'})
