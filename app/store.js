@@ -37,7 +37,7 @@ function devLine(a){
 function installUrl(a){
   if(!a.official) return null;
   if(a.install) return safeUrl(a.install);
-  return /^[a-z]+$/.test(a.id)?'https://frenchfries777.com/games/install/?v=4&app='+a.id:null;
+  return /^[a-z]+$/.test(a.id)?'https://frenchfries777.com/games/install/?v=5&app='+a.id:null;
 }
 /* 카드와 "설치" 버튼 모두 설치 화면(흰 화면)으로 가요. 설치 화면이 없는 앱만 원래 주소로 가요 */
 function cardUrl(a){if(a.nolink)return null;return a.community?a.url:(installUrl(a)||safeUrl(a.url))}
@@ -112,7 +112,7 @@ if(instB)instB.addEventListener('click',function(){var e=instEv;if(!e)return;ins
 try{if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js?v=2').catch(function(){})}catch(e){}
 
 var start=location.hash.slice(1); if(start==='games'||start==='educations'||start==='tools'||start==='social')tab=start;
-fetch('apps.json?v=6').then(function(r){if(!r.ok)throw 0;return r.json()}).then(function(j){apps=j.apps||[];render();loadExtra()})
+fetch('apps.json?v=7').then(function(r){if(!r.ok)throw 0;return r.json()}).then(function(j){apps=j.apps||[];render();loadExtra()})
   .catch(function(){document.getElementById('body').appendChild(el('p','note','앱 목록을 불러오지 못했어요. 새로고침해 보세요.'))});
 /* 공식 앱 별점 + 승인된 커뮤니티 앱. 못 불러와도 스토어는 그대로 보여요 */
 function loadExtra(){
