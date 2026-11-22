@@ -27,7 +27,7 @@ button{cursor:pointer}
 .logo img{border-radius:9px}
 .logo b{color:var(--fry)}
 .tabs{display:flex;gap:4px;margin-inline:auto}
-.tab{border:0;background:none;padding:9px 16px;border-radius:999px;color:var(--dim);font-weight:700}
+.tab{border:0;background:none;padding:9px 16px;border-radius:999px;color:var(--dim);font-weight:700;white-space:nowrap;flex:none}
 .tab[aria-selected=true]{background:var(--fg);color:var(--bg)}
 .srch{display:flex;align-items:center;gap:8px;background:var(--panel);border:1px solid var(--line);border-radius:999px;padding:0 14px;color:var(--dim);min-width:200px}
 .srch input{flex:1;min-width:0;border:0;background:none;padding:9px 0;outline:0}
@@ -84,8 +84,10 @@ h1{font-family:var(--head);font-size:clamp(30px,5vw,44px);margin:22px 0 4px;lett
   .feat{grid-template-columns:1fr}
   .fc{min-height:330px}
   .list{grid-template-columns:1fr}
-  .tabs{order:3;margin-inline:0;width:100%;overflow-x:auto}
+  .tabs{order:3;margin-inline:0;width:100%;overflow-x:auto;scrollbar-width:none}
+  .tabs::-webkit-scrollbar{display:none}
   .srch{margin-left:auto;min-width:0;flex:1}
   .logo span{display:none}
 }
+@media (max-width:380px){.tab{padding:9px 12px}}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
