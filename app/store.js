@@ -96,6 +96,7 @@ function render(){
     body.appendChild(section(labelOf(tab),l2));
   }
 }
+var rq=0;function renderSoon(){if(rq)return;rq=requestAnimationFrame(function(){rq=0;render()})}
 function setTab(t){tab=t;try{history.replaceState(null,'',t==='all'?location.pathname:'#'+t)}catch(e){}render()}
 
 document.getElementById('tabs').addEventListener('click',function(e){
@@ -123,15 +124,16 @@ function loadExtra(){
       apps.push({id:String(c.id),name:String(c.name||''),section:c.category,official:false,community:true,dev:String(c.dev||''),url:DETAIL+encodeURIComponent(c.id),tagline:String(c.tagline||''),
         tags:(c.tags||[]).map(String),icon:IMG.test(c.icon||'')?c.icon:''});
     });
-    apps.forEach(function(a){var s=st[a.id];if(s&&s.n){a.rating=Number(s.avg);a.rn=s.n}});
-    render();
+    var ch=(j.apps||[]).length>0;
+    apps.forEach(function(a){var s=st[a.id];if(s&&s.n&&(a.rating!==Number(s.avg)||a.rn!==s.n)){a.rating=Number(s.avg);a.rn=s.n;ch=true}});
+    if(ch)renderSoon();
   }).catch(function(){});
   /* 별점은 바로 읽어요(사이트 보안 설정에 Supabase 주소가 들어 있을 때). 안 되면 위 파일의 값을 그대로 써요 */
   fetch('https://kebsbuvuutilitwlvxzv.supabase.co/rest/v1/rpc/app_rating_stats',{method:'POST',headers:{'apikey':'sb_publishable_4Egu0zm3p6cxWGvP_-GlIw_mlCpO1Nf','Content-Type':'application/json'},body:'{"p_ids":null}'})
     .then(function(r){if(!r.ok)throw 0;return r.json()}).then(function(rows){
       var m={};(rows||[]).forEach(function(x){m[x.app_id]=x});
-      apps.forEach(function(a){var x=m[a.id];if(x&&x.n){a.rating=Number(x.avg);a.rn=x.n}});
-      render();
+      var ch=false;apps.forEach(function(a){var x=m[a.id];if(x&&x.n&&(a.rating!==Number(x.avg)||a.rn!==x.n)){a.rating=Number(x.avg);a.rn=x.n;ch=true}});
+      if(ch)renderSoon();
     }).catch(function(){});
 }
 })();
