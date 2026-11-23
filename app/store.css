@@ -92,4 +92,11 @@ main{min-height:80vh}
   .logo span{display:none}
 }
 @media (max-width:380px){.tab{padding:9px 12px}}
+/* 손가락으로 누르는 화면: 입력칸 글자 16px(아이폰이 확대하지 않게), 누르는 칸은 40px 이상 */
+@media (pointer:coarse){
+  .srch input{font-size:16px;padding:11px 0}
+  .up{display:inline-flex;align-items:center;min-height:40px}
+  .logo{padding:5px;margin:-5px}
+  .foot a{display:inline-block;padding:10px 0}
+}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}

@@ -6,3 +6,4 @@ html,body{margin:0;height:100%;background:#0e0e0e;color:#eee;font-family:system-
 .bar button{background:none;border:1px solid #3a3a3a;color:#bbb;border-radius:6px;font-size:12px;padding:3px 8px;cursor:pointer}
 #fr{position:fixed;top:calc(36px + env(safe-area-inset-top,0px));left:env(safe-area-inset-left,0px);right:env(safe-area-inset-right,0px);bottom:env(safe-area-inset-bottom,0px);width:auto;height:auto;border:0;background:#fff}
 #err{padding:60px 20px;text-align:center}
+@media (pointer:coarse){.bar a{padding:10px 6px;margin:-10px -6px}.bar button{padding:8px 12px;font-size:13px}}
